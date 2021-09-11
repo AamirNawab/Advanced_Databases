@@ -1,0 +1,537 @@
+-- SQL Statements
+
+-- Create database for Young Lives 
+
+Use master
+Go
+
+CREATE DATABASE YoungLives
+
+-- Create Table using t-sql
+
+USE YoungLives
+GO
+
+CREATE TABLE [dbo].[Vietnam]
+(
+[childid] [nvarchar] (255) NOT null,
+[round] [float] NOT NULL,
+[stunting] [float] NULL,
+[thinness] [float] NULL,
+[literate] [float] NULL,
+[underweight] [float] NULL,
+[chsmoke] [nvarchar] (255) null,
+[chalcohol] [nvarchar] (255) null,
+[yc] [float] null,
+[chdisability] [nvarchar] null,
+[entype] [float] null,
+[typesite] [float] null,
+[bmi] [decimal] (5,2) null
+)
+
+
+
+-- create table Peru
+
+USE YoungLives
+GO
+
+CREATE TABLE [dbo].[Peru]
+(
+[childid] [nvarchar] (255) NOT null,
+[round] [float] NOT NULL,
+[stunting] [float] NULL,
+[thinness] [float] NULL,
+[literate] [float] NULL,
+[underweight] [float] NULL,
+[chsmoke] [nvarchar] (255) null,
+[chalcohol] [nvarchar] (255) null,
+[yc] [float] null,
+[chdisability] [nvarchar] null,
+[entype] [float] null,
+[typesite] [float] null,
+)
+
+--Create table India
+
+USE YoungLives
+GO
+
+CREATE table [dbo].[India]
+(
+[childid] [nvarchar] (255) NOT null,
+[round] [float] NOT NULL,
+[stunting] [float] NULL,
+[thinness] [float] NULL,
+[literate] [float] NULL,
+[underweight] [float] NULL,
+[chsmoke] [nvarchar] (255) null,
+[chalcohol] [nvarchar] (255) null,
+[yc] [float] null,
+[chdisability] [nvarchar] null,
+[entype] [float] null,
+[typesite] [float] null,
+)
+
+select * from India
+
+-- Create Table Ethopia
+
+USE YoungLives
+GO
+
+CREATE table [dbo].[Ethiopia]
+(
+[childid] [nvarchar] (255) NOT null,
+[round] [float] NOT NULL,
+[stunting] [float] NULL,
+[thinness] [float] NULL,
+[literate] [float] NULL,
+[underweight] [float] NULL,
+[chsmoke] [nvarchar] (255) null,
+[chalcohol] [nvarchar] (255) null,
+[yc] [float] null,
+[chdisability] [nvarchar] null,
+[entype] [float] null,
+[typesite] [float] null,
+)
+
+-- Summarising data reports of India
+
+
+-- Measuring children in india underweight 
+
+USE YoungLives
+GO
+
+SELECT round,
+    COUNT(CASE WHEN underweight = 0 THEN 1 END) AS Not_Underweight,
+    COUNT(CASE WHEN underweight = 1 THEN 1 END) AS Moderately_underweight,
+    COUNT(CASE WHEN underweight = 2 THEN 1 END) AS Severely_underweight  
+FROM [dbo].[India]
+Group by round
+order by round
+
+
+-- Measuring literacy in India
+
+Create procedure 
+literacy @yc float
+as 
+SELECT
+    COUNT(CASE WHEN literate = 0 THEN 1 END) AS Illiterate,
+    COUNT(CASE WHEN literate = 1 THEN 1 END) AS Literate,
+	round
+FROM [dbo].[India]
+Where yc = @yc
+Group by round
+
+
+exec literacy @yc = 0 
+exec literacy @yc = 1
+
+-- measuring ethiopia disability
+
+Create procedure entype_disability @entype float  as 
+SELECT
+	round,
+    COUNT(CASE WHEN chdisability = 0 THEN 1 END) AS nondisability,
+    COUNT(CASE WHEN chdisability = 1 THEN 1 END) AS disability
+FROM [dbo].[Ethiopia]
+Where entype = @entype
+Group by round
+order by round
+Go
+
+--measuring Peru smoking
+
+create procedure 
+Chsmoking @chsmoke float
+as 
+SELECT
+	round,
+    COUNT(CASE WHEN typesite = 2 THEN 1 END) AS rural,
+    COUNT(CASE WHEN typesite = 1 THEN 1 END) AS urban 
+FROM [dbo].[Peru]
+Where chsmoke = @chsmoke
+Group by round
+order by round
+GO
+
+-- measuring peru child drinking
+
+create procedure 
+Chalcholism @chalcohol float
+as 
+SELECT
+	round,
+    COUNT(CASE WHEN typesite = 2 THEN 1 END) AS rural,
+    COUNT(CASE WHEN typesite = 1 THEN 1 END) AS urban 
+FROM [dbo].[Peru]
+Where chalcohol = @chalcohol
+Group by round
+order by round
+GO
+
+exec Chalcholism @chalcohol = 0  -- no
+exec Chalcholism @chalcohol = 1 -- yes
+
+-- measuring viet stunting
+
+create procedure 
+Chstunt @yc float
+as 
+SELECT
+	round,
+    COUNT(CASE WHEN stunting = 0 THEN 1 END) AS not_stunted,
+    COUNT(CASE WHEN stunting = 1 THEN 1 END) AS moderately_stunted,
+	COUNT(CASE WHEN stunting = 2 THEN 1 END) AS Severely_stunted
+FROM [dbo].[Vietnam]
+Where yc = @yc
+Group by round
+order by round
+GO
+exec Chstunt @yc = 0 -- older
+exec Chstunt @yc = 1  -- younger
+----------------------Task 2---------------------------------
+
+
+--Create Database name Vietnam 16_17
+USE master
+GO 
+
+CREATE DATABASE VietnamSurvey_2016_17
+
+-- Create Table for Vietnam Wave 1
+
+USE VietnamSurvey_2016_17 
+GO
+CREATE TABLE [dbo].[Vietnam_W1] (
+[UniqueID] [nvarchar] (255) Not null,
+[SchoolID] [float] Not Null,
+[ClassID] [float] Not Null,
+[StudentId] [float] Not null,
+[Province] [float] Not Null,
+[DistrictCode] [float] Not Null,
+[Locality] [float] Not Null,
+[Gender] [float] Null,
+[Age] [float] Null,
+[Ethinicty] [Float] Null,
+[Absent_days] [float] Not Null,
+[STDDINT] [datetime2] Null, 
+[STDLNGHM] [FLOAT] NULL,
+[STRPTCL1] [float] Null,
+[STRPTCL6] [float] Null,
+[STRPTCL10] [float] Null,
+[ENG_TEST] [nvarchar] (255) NULL,
+[ENG_RAWSCORE] [FLOAT] NULL,
+[MATH_TEST] [nvarchar] (255) null,
+[MATH_RAWSCORE] [FLOAT] NULL,
+[GRLENRL] [FLOAT] NULL,
+[BOYENRL] [FLOAT] NULL,
+[TGRLENRL] [FLOAT] NULL,
+[TBOYENRL] [FLOAT] NULL,
+[HTDINT] [DATE] NULL,
+[HTSEX] [FLOAT] NULL,
+[HTEXCTCH] [FLOAT] NULL
+)
+
+-- Create w2 table
+Create table [dbo].[vietnam_w2]
+(
+[UniqueID] [nvarchar] (255) Not null,
+[SchoolID] [float] Not Null,
+[ClassID] [float] Not Null,
+[StudentId] [float] Not null,
+[Province] [float] Not Null,
+[DistrictCode] [float] Not Null,
+[Locality] [float] Not Null,
+[Gender] [float] Null,
+[Age] [float] Null,
+[Ethinicty] [Float] Null,
+[Absent_days] [float] Not Null,
+[STDDINT] [datetime2] Null, 
+[STDLNGHM] [FLOAT] NULL,
+[STRPTCL1] [float] Null,
+[STRPTCL6] [float] Null,
+[STRPTCL10] [float] Null,
+[ENG_TEST] [nvarchar] (255) NULL,
+[ENG_RAWSCORE] [FLOAT] NULL,
+[MATH_TEST] [nvarchar] (255) null,
+[MATH_RAWSCORE] [FLOAT] NULL,
+[GRLENRL] [FLOAT] NULL,
+[BOYENRL] [FLOAT] NULL,
+[TGRLENRL] [FLOAT] NULL,
+[TBOYENRL] [FLOAT] NULL,
+[HTDINT] [DATE] NULL,
+[HTSEX] [FLOAT] NULL,
+[HTEXCTCH] [FLOAT] NULL
+)
+
+-- Counting marks in different provinces
+create procedure 
+ProvinceMarks @province float as
+SELECT ENG_RAWSCORE, count(*) as NumOfChildren
+From Vietnam_W1
+Where Province = @province and ENG_RAWSCORE is not null
+Group by ENG_RAWSCORE
+order by ENG_RAWSCORE
+GO
+
+exec ProvinceMarks @province = 1 -- Ben Tre
+exec ProvinceMarks @province = 2 -- Da Nang
+exec ProvinceMarks @province = 3 -- Hung Yen
+exec ProvinceMarks @province = 4 -- Lao Cai
+exec ProvinceMarks @province = 5 -- Phu Yen
+
+-- Average English scores in diferrent provinces
+
+SELECT Province, cast(AVG(ENG_RAWSCORE) as decimal(10,2)) as average_score
+From Vietnam_W1
+Where ENG_RAWSCORE is not null
+Group by Province
+order by Province
+
+-- Average Eng score W2 for each province 
+
+SELECT a.Province, cast(AVG(b.ENG_RAWSCORE) as decimal(10,0)) as average_score
+From Vietnam_W2 as b right outer join
+Vietnam_W1 as a on b.UniqueID = a.UniqueID 
+Where b.ENG_RAWSCORE is not null
+Group by a.Province
+order by a.Province
+
+--Localilty gender
+
+create procedure 
+Localgender @Locality float
+as
+Select ENG_RAWSCORE, 
+COUNT(CASE WHEN Gender = 2 THEN 1 END) as female,
+COUNT(CASE WHEN Gender = 1 THEN 1 END) as male
+From Vietnam_W1
+where Locality = @Locality and ENG_RAWSCORE is not null
+group by ENG_RAWSCORE
+order by ENG_RAWSCORE
+Go
+
+exec avg_gender @locality = 1
+exec avg_gender @locality = 2
+
+-- repeated grades
+
+-- grades 1- 5 
+
+Select province,
+COUNT(CASE WHEN STRPTCL1 = 0 THEN 1 END) as Never,
+COUNT(CASE WHEN STRPTCL1 = 1 THEN 1 END) as Once,
+COUNT(CASE WHEN STRPTCL1 = 2 THEN 1 END) as Multiple
+from Vietnam_W1
+Group by Province
+order by Province
+
+-- grades 6 -9 
+
+Select province,
+COUNT(CASE WHEN STRPTCL6 = 0 THEN 1 END) as Never,
+COUNT(CASE WHEN STRPTCL6 = 1 THEN 1 END) as Once,
+COUNT(CASE WHEN STRPTCL6 = 2 THEN 1 END) as More
+from Vietnam_W1
+Group by Province
+order by Province
+
+--grades 10
+
+Select province,
+COUNT(CASE WHEN STRPTCL10 = 0 THEN 1 END) as Never,
+COUNT(CASE WHEN STRPTCL10 = 1 THEN 1 END) as Once,
+COUNT(CASE WHEN STRPTCL10 = 2 THEN 1 END) as More
+from Vietnam_W1
+Group by Province
+order by Province
+
+-----Task 3 ---------
+
+-- Create database for Manchester Crimes
+
+Use Master 
+go
+Create Database Manchester_Crimes
+
+-- Create tables 
+
+--Table for all crimes in Greater Manchester
+
+CREATE TABLE [dbo].[Man_crimes](
+[Crime ID] [nvarchar](255) NULL,
+[Month] [nvarchar](50) NULL,
+[Reported by] [nvarchar](150) NULL,
+[Falls within] [nvarchar](150) NULL,
+[Longitude] [float] NULL,
+[Latitude] [float] NULL,
+[Location] [nvarchar](255) NULL,
+[LSOA code] [nvarchar](150) NULL,
+[LSOA name] [nvarchar](150) NULL,
+[Crime type] [nvarchar](150) NULL,
+[Last outcome category] [nvarchar](500) NULL,
+[Context] [nvarchar](500) NULL
+)
+
+-- Table for LSOA ALL MID 17
+
+CREATE TABLE [dbo].[LSOA_ALL_MID_17] (
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+-- Table for LSOA Mid females 17
+CREATE TABLE [dbo].[LSOA_MID_Females17] (
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+-- Table for LSOA mid Males 17
+CREATE TABLE [dbo].[LSOA_MID_Males17] (
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+-- Table for LSOA ALL MID 18
+
+CREATE TABLE [dbo].[LSOA_MID_ALL_18]
+(
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+-- Table for LSOA MID Female 18
+
+CREATE TABLE [dbo].[LSOA_MID_Female_18]
+(
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+-- Table for LSOA Male 18
+
+CREATE TABLE [dbo].[LSOA_MID_Male_18]
+(
+[Area codes] [nvarchar] (255) null,
+[All Ages] [float] null, 
+[Area Names] [nvarchar] (255) null
+)
+
+
+ALTER TABLE dbo.Man_Crimes
+ADD ID INT IDENTITY;
+ALTER TABLE dbo.Man_Crimes
+ADD CONSTRAINT PK_Id PRIMARY KEY NONCLUSTERED (ID);
+GO
+
+ALTER TABLE [dbo].[Man_Crimes]
+ADD [GeoLocation] GEOGRAPHY
+GO
+
+UPDATE [dbo].[Man_Crimes]
+SET [GeoLocation] = geography::Point([Latitude], [Longitude], 4326)
+WHERE [Longitude] IS NOT NULL and [Latitude] IS NOT NULL
+GO
+
+CREATE VIEW [dbo].[Manchester_Anti_social]
+AS
+SELECT *
+FROM [dbo].[Man_Crimes]
+WHERE [Crime type]='Anti-social behaviour'
+AND [GeoLocation] IS NOT NULL
+
+Select [Crime ID]
+      ,[Month]
+      ,[Reported by]
+      ,[Falls within]
+      ,[Longitude]
+      ,[Latitude]
+      ,[Location]
+      ,[LSOA code]
+      ,[LSOA name]
+      ,[Crime type]
+      ,[Last outcome category]
+      ,[Context]
+      ,[ID]
+, LSOA_MID_ALL_17.[All Ages] as Total_Pop17, 
+LSOA_MID_Females17.[All Ages] as Total_Female17, 
+LSOA_MID_Males17.[All Ages]as Total_Male17
+From Man_crimes
+Inner join LSOA_MID_ALL_17 on Man_crimes.[LSOA code]
+= LSOA_MID_ALL_17.[Area codes]
+Inner join LSOA_MID_Males17 on Man_crimes.[LSOA code] = 
+LSOA_MID_Males17.[Area codes]
+Inner Join LSOA_MID_Females17 on Man_crimes.[LSOA code] = 
+LSOA_MID_Females17.[Area codes]
+
+UNION
+
+Select 
+[Crime ID],[Month],[Reported by],[Falls within],[Longitude]
+,[Latitude],[Location],[LSOA code],[LSOA name],[Crime type]
+,[Last outcome category],[Context],[ID],LSOA_MID_ALL_18.[All Ages] as Total_Pop18, 
+LSOA_MID_Female_18.[All Ages] as Total_Female18, 
+LSOA_MID_Male_18.[All Ages]as Total_Male18
+From Man_crimes
+Inner join LSOA_MID_ALL_18 on Man_crimes.[LSOA code]
+= LSOA_MID_ALL_18.[Area codes]
+Inner join LSOA_MID_Male_18 on Man_crimes.[LSOA code] = 
+LSOA_MID_Male_18.[Area codes]
+Inner Join LSOA_MID_Female_18 on Man_crimes.[LSOA code] = 
+LSOA_MID_Female_18.[Area codes]
+
+-- Bicycle theft
+CREATE VIEW [dbo].[Bicycle_theft]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Bicycle theft' AND [GeoLocation] IS NOT NULL
+-- Burglary
+ALTER VIEW [dbo].[Burglary] AS
+SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Burglary' AND [GeoLocation] IS NOT NULL
+-- Criminal damage and arson
+CREATE VIEW [dbo].[Criminal_damage_and_arson]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Criminal damage and arson' AND [GeoLocation] IS NOT NULL
+-- Drugs
+CREATE VIEW [dbo].[Drugs]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Drugs' AND [GeoLocation] IS NOT NULL
+-- Anti-social behaviour
+CREATE VIEW [dbo].[Manchester_Anti_social]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Anti-social behaviour' AND [GeoLocation] IS NOT NULL
+-- Other crime
+USE [Manchester_Crimes]
+CREATE VIEW [dbo].[Other_crime]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Other crime' AND [GeoLocation] IS NOT NULL
+-- Other theft
+CREATE VIEW [dbo].[Other_theft]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Other theft' AND [GeoLocation] IS NOT NULL
+-- Possession of weapons
+CREATE VIEW [dbo].[Possession_of_weapons]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Possession of weapons' AND [GeoLocation] IS NOT NULL
+-- Public order
+CREATE VIEW [dbo].[Public_order]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Public order' AND [GeoLocation] IS NOT NULL
+-- Robbery
+CREATE VIEW [dbo].[Robbery]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Robbery'
+AND [GeoLocation] IS NOT NULL
+-- Shoplifting
+CREATE VIEW [dbo].[Shoplifting]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Shoplifting' AND [GeoLocation] IS NOT NULL
+-- Theft from the person
+CREATE VIEW [dbo].[Theft_from_the_person]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Theft from the person' AND [GeoLocation] IS NOT NULL
+-- Vehicle crime
+CREATE VIEW [dbo].[Vehicle_crime]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Vehicle crime' AND [GeoLocation] IS NOT NULL
+-- Violence and sexual offences
+CREATE VIEW [dbo].[Violence_and_sexual_offences]
+AS SELECT * FROM [dbo].[Man_Crimes] WHERE [Crime type]='Violence and sexual offences' AND [GeoLocation] IS NOT NULL
+
+
